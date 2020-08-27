@@ -171,11 +171,24 @@ namespace VSslnToCMake
         /// </summary>
         public string TargetName { get { return targetName; } }
 
+        private Dictionary<string, string> ImportLibs;
+
+        private ConfigurationTypes OutputType = ConfigurationTypes.typeUnknown;
         /// <summary>
         /// Type of output this project generates.
         /// </summary>
-        public ConfigurationTypes ConfigurationType { get { return vcCfgs[0].ConfigurationType; } }
- 
+        public ConfigurationTypes ConfigurationType
+        {
+            get
+            {
+                if (OutputType == ConfigurationTypes.typeUnknown)
+                {
+                    OutputType = vcCfgs[0].ConfigurationType;
+                }
+                return OutputType;
+            }
+        }
+
         public Project Project { get { return project; } }
 
         private Logger logger = new NullLogger();
@@ -231,9 +244,13 @@ namespace VSslnToCMake
 
         public Dictionary<string, string> getImportLibraries()
         {
-            return vcCfgs.ToDictionary(
-                x => solutionConfigurationNames[x.ConfigurationName],
-                x => x.Evaluate(x.ImportLibrary));
+            if (ImportLibs == null)
+            {
+                ImportLibs = vcCfgs.ToDictionary(
+                    x => solutionConfigurationNames[x.ConfigurationName],
+                    x => x.Evaluate(x.ImportLibrary));
+            }
+            return ImportLibs;
         }
 
         public bool Prepare()
