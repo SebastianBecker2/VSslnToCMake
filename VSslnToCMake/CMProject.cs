@@ -95,11 +95,11 @@ namespace VSslnToCMake
             // TODO デフォルト値の判定
             if (headerFilePath != DEFAULT_HEADER_FILE_PATH)
             {
-                option += string.Format($"\"{headerFilePath}\"");
+                option += string.Format($"\\\"{headerFilePath.Trim('\"').Replace("\\", "/")}\\\"");
             }
             if (pchFilePath != DEFAULT_PCH_FILE_PATH)
             {
-                option += string.Format($" /Fp\"{pchFilePath}\"");
+                option += string.Format($" /Fp\\\"{pchFilePath.Trim('\"').Replace("\\", "/")}\\\"");
             }
             return option;
         }
