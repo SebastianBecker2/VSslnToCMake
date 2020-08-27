@@ -867,7 +867,7 @@ namespace VSslnToCMake
                     GetSolutionConfigurationName,
                     kv => Environment.NewLine + "    " + 
                           string.Join(";" + Environment.NewLine + "    ",
-                                      kv.paths)));
+                                      kv.paths.Select(p => p.Replace("\\", "/")))));
             sb.AppendLine();
             sb.AppendLine(")");
 
@@ -1312,7 +1312,7 @@ namespace VSslnToCMake
                 sb.AppendLine($"  $<$<CONFIG:{solutionConfigurationNames[cfgName]}>:");
                 foreach (var path in paths)
                 {
-                    sb.Append($"    {option}{path}");
+                    sb.Append($"    {option}{path.Replace("\\", "/")}");
                     if (paths.IndexOf(path) == paths.Count - 1)
                     {
                         sb.AppendLine(">");
